@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGNI AI | Video Generator</title>
+    <link rel="stylesheet" href="./stlyle.css">
+</head>
+<body>
+
+<header class="navbar">
+    <a class="logo" href="#home">AGNI<span> AI</span></a>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#create">Create Video</a>
+        <a href="#features">Features</a>
+    </nav>
+
+    <button class="sign-btn">Sign In</button>
+</header>
+
+<section class="hero" id="home">
+
+    <div class="badge">YOUR NEXT GENERATION AI STUDIO</div>
+
+    <h1>
+        Turn Your Ideas Into
+        <span>Extraordinary Videos.</span>
+    </h1>
+
+    <p class="subtitle">
+        Transform your imagination into cinematic AI videos.
+        Create, explore and bring your stories to life.
+    </p>
+
+    <div class="generator" id="create">
+
+        <div class="generator-top">
+            <span>AI VIDEO GENERATOR</span>
+            <span class="free">FREE STUDIO</span>
+        </div>
+
+        <textarea id="prompt"
+        placeholder="Describe your dream video... Example: A cinematic Indian village at sunset, a young man walking through golden fields..."></textarea>
+
+        <div class="settings">
+
+            <div class="setting">
+                <label>VIDEO DURATION</label>
+                <select id="duration">
+                    <option value="5">5 Seconds</option>
+                    <option value="10">10 Seconds</option>
+                </select>
+            </div>
+
+            <div class="setting">
+                <label>VIDEO STYLE</label>
+                <select id="style">
+                    <option>Realistic</option>
+                    <option>Cinematic</option>
+                    <option>Anime</option>
+                    <option>3D Animation</option>
+                </select>
+            </div>
+
+            <div class="setting">
+                <label>ASPECT RATIO</label>
+                <select id="ratio">
+                    <option>16:9 Landscape</option>
+                    <option>9:16 Portrait</option>
+                    <option>1:1 Square</option>
+                </select>
+            </div>
+
+        </div>
+
+        <button id="generate" class="generate-btn">
+            Generate AI Video
+        </button>
+
+        <p id="status"></p>
+
+    </div>
+
+    <div class="trust">
+        <span>Easy to use</span>
+        <span>Creative freedom</span>
+        <span>Mobile friendly</span>
+    </div>
+
+</section>
+
+<section class="features" id="features">
+
+    <div class="section-heading">
+        <span>POWERFUL FEATURES</span>
+        <h2>Your Creative Universe</h2>
+        <p>Everything you need to create amazing content.</p>
+    </div>
+
+    <div class="feature-grid">
+
+        <div class="feature-card">
+            <div class="feature-icon">🎬</div>
+            <h3>Text to Video</h3>
+            <p>Turn your text ideas into AI-generated video scenes.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🖼️</div>
+            <h3>Image to Video</h3>
+            <p>Bring your images to life with AI animation.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3>Creative Styles</h3>
+            <p>Explore cinematic, realistic, anime and 3D styles.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+    <div class="logo">AGNI<span> AI</span></div>
+    <p>© 2026 AGNI AI Studio. Built for creators.</p>
+</footer>
+
+<script src="./script.js"></script>
+</body>
+</html>
