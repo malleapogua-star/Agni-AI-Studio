@@ -261,6 +261,27 @@ input[type="file"] {
     overflow-wrap: anywhere;
 }
 
+.video-output {
+    margin-top: 35px;
+    text-align: center;
+}
+
+.video-output h3 {
+    margin-bottom: 20px;
+    font-size: 23px;
+    color: #c4b5fd;
+}
+
+#generatedVideo {
+    display: none;
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    background: #000;
+    border: 1px solid #554779;
+    border-radius: 15px;
+}
+
 .features-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

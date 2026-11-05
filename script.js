@@ -5,32 +5,36 @@ const promptInput = document.getElementById("prompt");
 const durationInput = document.getElementById("duration");
 const styleInput = document.getElementById("style");
 const ratioInput = document.getElementById("ratio");
-const statusText = document.getElementById("status");
-
-const imageUpload = document.getElementById("imageUpload");
+const imageInput = document.getElementById("imageUpload");
 const imagePreview = document.getElementById("imagePreview");
+const statusText = document.getElementById("status");
+const videoElement = document.getElementById("generatedVideo");
 
-// Show selected image preview
-imageUpload.addEventListener("change", function () {
-    const file = imageUpload.files[0];
+let currentVideoUrl = null;
 
-    if (!file) {
-        imagePreview.removeAttribute("src");
-        imagePreview.style.display = "none";
-        return;
-    }
+if (imageInput && imagePreview) {
+    imageInput.addEventListener("change", function () {
+        const file = this.files[0];
 
-    if (!file.type.startsWith("image/")) {
-        statusText.textContent = "⚠️ Please select a valid image.";
-        imageUpload.value = "";
-        return;
-    }
+        if (!file) {
+            imagePreview.style.display = "none";
+            imagePreview.removeAttribute("src");
+            return;
+        }
 
-    imagePreview.src = URL.createObjectURL(file);
-    imagePreview.style.display = "block";
-});
+        if (!file.type.startsWith("image/")) {
+            statusText.textContent = "⚠️ Please select a valid image.";
+            this.value = "";
+            imagePreview.style.display = "none";
+            return;
+        }
 
-// Send video request to backend
+        imagePreview.src = URL.createObjectURL(file);
+        imagePreview.style.display = "block";
+        statusText.textContent = "✅ Reference image selected.";
+    });
+}
+
 generateBtn.addEventListener("click", async function () {
     const prompt = promptInput.value.trim();
 
@@ -40,45 +44,87 @@ generateBtn.addEventListener("click", async function () {
         return;
     }
 
-    statusText.textContent = "⏳ Connecting to AGNI AI Backend...";
-    generateBtn.textContent = "Submitting...";
+    const formData = new FormData();
+    formData.append("prompt", prompt);
+    formData.append("duration", durationInput.value);
+    formData.append("style", styleInput.value);
+    formData.append("aspect_ratio", ratioInput.value);
+
+    if (imageInput && imageInput.files.length > 0) {
+        formData.append("image", imageInput.files[0]);
+    }
+
     generateBtn.disabled = true;
+    generateBtn.textContent = "⏳ Generating...";
+    statusText.textContent = "Connecting to AGNI AI Backend...";
+    videoElement.style.display = "none";
 
     try {
         const response = await fetch(`${BACKEND_URL}/generate`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                prompt: prompt,
-                duration: Number(durationInput.value),
-                style: styleInput.value,
-                aspect_ratio: ratioInput.value
-            })
+            body: formData
         });
 
-        const result = await response.json();
-
         if (!response.ok) {
-            const detail = Array.isArray(result.detail)
-                ? result.detail.map(issue => issue.msg).join(" ")
-                : result.detail;
+            let errorMessage = `Request failed (${response.status})`;
 
-            throw new Error(detail || `Server error: ${response.status}`);
+            try {
+                const result = await response.json();
+
+                if (typeof result.detail === "string") {
+                    errorMessage = result.detail;
+                } else if (Array.isArray(result.detail)) {
+                    errorMessage = result.detail
+                        .map(item => item.msg)
+                        .join(", ");
+                }
+            } catch (_) {
+                // Keep the HTTP status message when the server response is not JSON.
+            }
+
+            throw new Error(errorMessage);
         }
 
-        statusText.textContent =
-            `✅ ${result.message || "Your request was received."}`;
+        const videoBlob = await response.blob();
 
+        if (!videoBlob.type.startsWith("video/")) {
+            throw new Error("Server did not return a valid video file.");
+        }
+
+        if (currentVideoUrl) {
+            URL.revokeObjectURL(currentVideoUrl);
+        }
+
+        currentVideoUrl = URL.createObjectURL(videoBlob);
+        videoElement.src = currentVideoUrl;
+        videoElement.style.display = "block";
+        videoElement.load();
+        videoElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        statusText.textContent = "✅ Your AI video is ready!";
     } catch (error) {
         console.error("AGNI AI error:", error);
-
         statusText.textContent =
-            `❌ ${error.message || "Unable to connect to backend."}`;
-
+            `❌ Video generation failed: ${error.message || "Unable to connect to backend."}`;
     } finally {
-        generateBtn.textContent = "✦ Generate AI Video";
         generateBtn.disabled = false;
+        generateBtn.textContent = "✦ Generate AI Video";
     }
 });
+
+function downloadGeneratedVideo() {
+    if (!currentVideoUrl) {
+        statusText.textContent = "⚠️ Generate a video first.";
+        return;
+    }
+
+    const link = document.createElement("a");
+    link.href = currentVideoUrl;
+    link.download = "AGNI-AI-Video.mp4";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+}

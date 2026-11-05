@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#090914">
     <title>AGNI AI Studio - AI Video Generator</title>
     <link rel="stylesheet" href="./stlyle.css">
 </head>
-<body>
 
+<body>
     <header class="navbar">
         <a href="#home" class="logo">✦ AGNI AI</a>
 
@@ -53,7 +54,7 @@
                         <label for="duration">VIDEO DURATION</label>
                         <select id="duration">
                             <option value="5">5 Seconds</option>
-                            <option value="10">10 Seconds</option>
+                            <option value="8">8 Seconds</option>
                         </select>
                     </div>
 
@@ -79,12 +80,21 @@
 
                 <div class="upload-section">
                     <label for="imageUpload">UPLOAD REFERENCE IMAGE (OPTIONAL)</label>
-                    <input type="file" id="imageUpload" accept="image/*">
+                    <input
+                        type="file"
+                        id="imageUpload"
+                        accept="image/png,image/jpeg,image/webp"
+                    >
                     <img id="imagePreview" alt="Selected reference image preview">
                 </div>
 
                 <button id="generate" type="button">✦ Generate AI Video</button>
                 <p id="status" role="status" aria-live="polite"></p>
+
+                <div class="video-output">
+                    <h3>Generated Video</h3>
+                    <video id="generatedVideo" controls playsinline></video>
+                </div>
             </div>
         </section>
 
@@ -105,7 +115,7 @@
                 <article class="feature-card">
                     <div class="feature-icon">🖼️</div>
                     <h3>Image to Video</h3>
-                    <p>Prepare image references for future AI animation.</p>
+                    <p>Upload a reference image and animate your character.</p>
                 </article>
 
                 <article class="feature-card">
