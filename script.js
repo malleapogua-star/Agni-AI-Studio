@@ -1,3 +1,5 @@
+```javascript
+const BACKEND_URL = "https://agni-ai-backend.onrender.com";
 
 const generateBtn = document.getElementById("generate");
 const promptInput = document.getElementById("prompt");
@@ -7,44 +9,49 @@ const ratioInput = document.getElementById("ratio");
 const statusText = document.getElementById("status");
 
 generateBtn.addEventListener("click", async function () {
-
     const prompt = promptInput.value.trim();
 
-    if (prompt === "") {
+    if (!prompt) {
         statusText.textContent = "⚠️ Please enter your video prompt!";
         return;
     }
 
-    statusText.textContent = "⏳ Submitting your video request...";
+    statusText.textContent = "⏳ Connecting to AGNI AI Backend...";
     generateBtn.textContent = "Submitting...";
     generateBtn.disabled = true;
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/generate", {
+        const response = await fetch(`${BACKEND_URL}/generate`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
-                prompt,
+                prompt: prompt,
                 duration: Number(durationInput.value),
                 style: styleInput.value,
-                aspect_ratio: ratioInput.value.split(" ")[0],
-            }),
+                aspect_ratio: ratioInput.value.split(" ")[0]
+            })
         });
+
         const result = await response.json();
 
         if (!response.ok) {
             const detail = Array.isArray(result.detail)
-                ? result.detail.map((issue) => issue.msg).join(" ")
+                ? result.detail.map(issue => issue.msg).join(" ")
                 : result.detail;
-            throw new Error(detail || `Request failed (${response.status}).`);
+
+            throw new Error(detail || `Request failed (${response.status})`);
         }
 
         statusText.textContent = `✅ ${result.message}`;
+
     } catch (error) {
-        const message = error instanceof Error ? error.message : "Unknown error.";
-        statusText.textContent = `❌ Unable to submit request: ${message}`;
+        statusText.textContent =
+            `❌ Unable to submit request: ${error.message}`;
     } finally {
         generateBtn.textContent = "Generate AI Video";
         generateBtn.disabled = false;
     }
 });
+```
