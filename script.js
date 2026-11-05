@@ -1,4 +1,3 @@
-```javascript
 const BACKEND_URL = "https://agni-ai-backend.onrender.com";
 
 const generateBtn = document.getElementById("generate");
@@ -8,11 +7,36 @@ const styleInput = document.getElementById("style");
 const ratioInput = document.getElementById("ratio");
 const statusText = document.getElementById("status");
 
+const imageUpload = document.getElementById("imageUpload");
+const imagePreview = document.getElementById("imagePreview");
+
+// Show selected image preview
+imageUpload.addEventListener("change", function () {
+    const file = imageUpload.files[0];
+
+    if (!file) {
+        imagePreview.removeAttribute("src");
+        imagePreview.style.display = "none";
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        statusText.textContent = "⚠️ Please select a valid image.";
+        imageUpload.value = "";
+        return;
+    }
+
+    imagePreview.src = URL.createObjectURL(file);
+    imagePreview.style.display = "block";
+});
+
+// Send video request to backend
 generateBtn.addEventListener("click", async function () {
     const prompt = promptInput.value.trim();
 
     if (!prompt) {
         statusText.textContent = "⚠️ Please enter your video prompt!";
+        promptInput.focus();
         return;
     }
 
@@ -30,7 +54,7 @@ generateBtn.addEventListener("click", async function () {
                 prompt: prompt,
                 duration: Number(durationInput.value),
                 style: styleInput.value,
-                aspect_ratio: ratioInput.value.split(" ")[0]
+                aspect_ratio: ratioInput.value
             })
         });
 
@@ -41,17 +65,20 @@ generateBtn.addEventListener("click", async function () {
                 ? result.detail.map(issue => issue.msg).join(" ")
                 : result.detail;
 
-            throw new Error(detail || `Request failed (${response.status})`);
+            throw new Error(detail || `Server error: ${response.status}`);
         }
 
-        statusText.textContent = `✅ ${result.message}`;
+        statusText.textContent =
+            `✅ ${result.message || "Your request was received."}`;
 
     } catch (error) {
+        console.error("AGNI AI error:", error);
+
         statusText.textContent =
-            `❌ Unable to submit request: ${error.message}`;
+            `❌ ${error.message || "Unable to connect to backend."}`;
+
     } finally {
-        generateBtn.textContent = "Generate AI Video";
+        generateBtn.textContent = "✦ Generate AI Video";
         generateBtn.disabled = false;
     }
 });
-```
