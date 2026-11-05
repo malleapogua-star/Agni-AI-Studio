@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AGNI AI | Video Generator</title>
-    <link rel="stylesheet" href="./stlyle.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
 <header class="navbar">
-    <a class="logo" href="#home">AGNI<span> AI</span></a>
+    <a class="logo" href="#home">✦ AGNI <span>AI</span></a>
 
     <nav>
         <a href="#home">Home</a>
@@ -42,13 +42,15 @@
             <span class="free">FREE STUDIO</span>
         </div>
 
+        <label for="prompt">VIDEO PROMPT</label>
         <textarea id="prompt"
-        placeholder="Describe your dream video... Example: A cinematic Indian village at sunset, a young man walking through golden fields..."></textarea>
+            placeholder="Describe your dream video... Example: Two Indian friends walking in a village at sunset..."
+            rows="5"></textarea>
 
         <div class="settings">
 
             <div class="setting">
-                <label>VIDEO DURATION</label>
+                <label for="duration">VIDEO DURATION</label>
                 <select id="duration">
                     <option value="5">5 Seconds</option>
                     <option value="10">10 Seconds</option>
@@ -56,38 +58,52 @@
             </div>
 
             <div class="setting">
-                <label>VIDEO STYLE</label>
+                <label for="style">VIDEO STYLE</label>
                 <select id="style">
-                    <option>Realistic</option>
-                    <option>Cinematic</option>
-                    <option>Anime</option>
-                    <option>3D Animation</option>
+                    <option value="Realistic">Realistic</option>
+                    <option value="Cinematic">Cinematic</option>
+                    <option value="Anime">Anime</option>
+                    <option value="3D Animation">3D Animation</option>
                 </select>
             </div>
 
             <div class="setting">
-                <label>ASPECT RATIO</label>
+                <label for="ratio">ASPECT RATIO</label>
                 <select id="ratio">
-                    <option>16:9 Landscape</option>
-                    <option>9:16 Portrait</option>
-                    <option>1:1 Square</option>
+                    <option value="16:9">16:9 Landscape</option>
+                    <option value="9:16">9:16 Portrait</option>
+                    <option value="1:1">1:1 Square</option>
                 </select>
             </div>
 
         </div>
 
+        <div class="upload-area">
+            <label for="imageUpload">UPLOAD REFERENCE IMAGE (OPTIONAL)</label>
+            <input type="file" id="imageUpload" accept="image/*">
+            <img id="imagePreview" alt="Image preview" hidden>
+        </div>
+
         <button id="generate" class="generate-btn">
-            Generate AI Video
+            ✦ Generate AI Video
         </button>
 
-        <p id="status"></p>
+        <p id="status" role="status"></p>
+
+        <div id="result" hidden>
+            <h3>Your Generated Video</h3>
+            <video id="videoPlayer" controls playsinline></video>
+            <a id="downloadVideo" download="agni-ai-video.mp4">
+                Download Video
+            </a>
+        </div>
 
     </div>
 
     <div class="trust">
-        <span>Easy to use</span>
-        <span>Creative freedom</span>
-        <span>Mobile friendly</span>
+        <span>✓ Easy to use</span>
+        <span>✓ Creative freedom</span>
+        <span>✓ Mobile friendly</span>
     </div>
 
 </section>
@@ -125,7 +141,7 @@
 </section>
 
 <footer>
-    <div class="logo">AGNI<span> AI</span></div>
+    <div class="logo">✦ AGNI <span>AI</span></div>
     <p>© 2026 AGNI AI Studio. Built for creators.</p>
 </footer>
 
