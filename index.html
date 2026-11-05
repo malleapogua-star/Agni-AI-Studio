@@ -1,150 +1,127 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGNI AI | Video Generator</title>
-    <link rel="stylesheet" href="./style.css">
+    <title>AGNI AI Studio - AI Video Generator</title>
+    <link rel="stylesheet" href="./stlyle.css">
 </head>
 <body>
 
-<header class="navbar">
-    <a class="logo" href="#home">✦ AGNI <span>AI</span></a>
+    <header class="navbar">
+        <a href="#home" class="logo">✦ AGNI AI</a>
 
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#create">Create Video</a>
-        <a href="#features">Features</a>
-    </nav>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#create">Create Video</a>
+            <a href="#features">Features</a>
+        </nav>
 
-    <button class="sign-btn">Sign In</button>
-</header>
+        <a href="#create" class="signin">Get Started</a>
+    </header>
 
-<section class="hero" id="home">
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <span class="eyebrow">YOUR NEXT GENERATION AI STUDIO</span>
+                <h1>Turn Your Ideas Into <span>Extraordinary Videos.</span></h1>
+                <p>
+                    Transform your imagination into cinematic AI videos.
+                    Create, explore and bring your stories to life.
+                </p>
+                <a href="#create" class="primary-link">✦ Create Your Video</a>
+            </div>
+        </section>
 
-    <div class="badge">YOUR NEXT GENERATION AI STUDIO</div>
-
-    <h1>
-        Turn Your Ideas Into
-        <span>Extraordinary Videos.</span>
-    </h1>
-
-    <p class="subtitle">
-        Transform your imagination into cinematic AI videos.
-        Create, explore and bring your stories to life.
-    </p>
-
-    <div class="generator" id="create">
-
-        <div class="generator-top">
-            <span>AI VIDEO GENERATOR</span>
-            <span class="free">FREE STUDIO</span>
-        </div>
-
-        <label for="prompt">VIDEO PROMPT</label>
-        <textarea id="prompt"
-            placeholder="Describe your dream video... Example: Two Indian friends walking in a village at sunset..."
-            rows="5"></textarea>
-
-        <div class="settings">
-
-            <div class="setting">
-                <label for="duration">VIDEO DURATION</label>
-                <select id="duration">
-                    <option value="5">5 Seconds</option>
-                    <option value="10">10 Seconds</option>
-                </select>
+        <section class="generator-section" id="create">
+            <div class="section-heading">
+                <span class="eyebrow">AI VIDEO GENERATOR</span>
+                <h2>Create Your <span>AI Video</span></h2>
+                <p>Describe your imagination and prepare your video request.</p>
             </div>
 
-            <div class="setting">
-                <label for="style">VIDEO STYLE</label>
-                <select id="style">
-                    <option value="Realistic">Realistic</option>
-                    <option value="Cinematic">Cinematic</option>
-                    <option value="Anime">Anime</option>
-                    <option value="3D Animation">3D Animation</option>
-                </select>
+            <div class="generator-card">
+                <label for="prompt">VIDEO PROMPT</label>
+                <textarea
+                    id="prompt"
+                    placeholder="Describe the video you want to create..."
+                    maxlength="4000"
+                ></textarea>
+
+                <div class="settings-grid">
+                    <div class="field">
+                        <label for="duration">VIDEO DURATION</label>
+                        <select id="duration">
+                            <option value="5">5 Seconds</option>
+                            <option value="10">10 Seconds</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="style">VIDEO STYLE</label>
+                        <select id="style">
+                            <option value="Realistic">Realistic</option>
+                            <option value="Cinematic">Cinematic</option>
+                            <option value="Anime">Anime</option>
+                            <option value="3D Animation">3D Animation</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="ratio">ASPECT RATIO</label>
+                        <select id="ratio">
+                            <option value="16:9">16:9 Landscape</option>
+                            <option value="9:16">9:16 Portrait</option>
+                            <option value="1:1">1:1 Square</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="upload-section">
+                    <label for="imageUpload">UPLOAD REFERENCE IMAGE (OPTIONAL)</label>
+                    <input type="file" id="imageUpload" accept="image/*">
+                    <img id="imagePreview" alt="Selected reference image preview">
+                </div>
+
+                <button id="generate" type="button">✦ Generate AI Video</button>
+                <p id="status" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section class="features-section" id="features">
+            <div class="section-heading">
+                <span class="eyebrow">POWERFUL FEATURES</span>
+                <h2>Your Creative <span>Universe</span></h2>
+                <p>Everything you need to create amazing content.</p>
             </div>
 
-            <div class="setting">
-                <label for="ratio">ASPECT RATIO</label>
-                <select id="ratio">
-                    <option value="16:9">16:9 Landscape</option>
-                    <option value="9:16">9:16 Portrait</option>
-                    <option value="1:1">1:1 Square</option>
-                </select>
+            <div class="features-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">🎬</div>
+                    <h3>Text to Video</h3>
+                    <p>Turn your text ideas into AI-generated video scenes.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">🖼️</div>
+                    <h3>Image to Video</h3>
+                    <p>Prepare image references for future AI animation.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Creative Styles</h3>
+                    <p>Explore cinematic, realistic, anime and 3D styles.</p>
+                </article>
             </div>
+        </section>
+    </main>
 
-        </div>
+    <footer>
+        <a href="#home" class="logo">✦ AGNI AI</a>
+        <p>© 2026 AGNI AI Studio. Built for creators.</p>
+    </footer>
 
-        <div class="upload-area">
-            <label for="imageUpload">UPLOAD REFERENCE IMAGE (OPTIONAL)</label>
-            <input type="file" id="imageUpload" accept="image/*">
-            <img id="imagePreview" alt="Image preview" hidden>
-        </div>
-
-        <button id="generate" class="generate-btn">
-            ✦ Generate AI Video
-        </button>
-
-        <p id="status" role="status"></p>
-
-        <div id="result" hidden>
-            <h3>Your Generated Video</h3>
-            <video id="videoPlayer" controls playsinline></video>
-            <a id="downloadVideo" download="agni-ai-video.mp4">
-                Download Video
-            </a>
-        </div>
-
-    </div>
-
-    <div class="trust">
-        <span>✓ Easy to use</span>
-        <span>✓ Creative freedom</span>
-        <span>✓ Mobile friendly</span>
-    </div>
-
-</section>
-
-<section class="features" id="features">
-
-    <div class="section-heading">
-        <span>POWERFUL FEATURES</span>
-        <h2>Your Creative Universe</h2>
-        <p>Everything you need to create amazing content.</p>
-    </div>
-
-    <div class="feature-grid">
-
-        <div class="feature-card">
-            <div class="feature-icon">🎬</div>
-            <h3>Text to Video</h3>
-            <p>Turn your text ideas into AI-generated video scenes.</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="feature-icon">🖼️</div>
-            <h3>Image to Video</h3>
-            <p>Bring your images to life with AI animation.</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="feature-icon">🎨</div>
-            <h3>Creative Styles</h3>
-            <p>Explore cinematic, realistic, anime and 3D styles.</p>
-        </div>
-
-    </div>
-
-</section>
-
-<footer>
-    <div class="logo">✦ AGNI <span>AI</span></div>
-    <p>© 2026 AGNI AI Studio. Built for creators.</p>
-</footer>
-
-<script src="./script.js"></script>
+    <script src="./script.js"></script>
 </body>
 </html>
