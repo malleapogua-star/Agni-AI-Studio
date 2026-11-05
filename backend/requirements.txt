@@ -4,3 +4,4 @@ python-dotenv
 huggingface-hub
 gradio_client
 python-multipart
+imageio-ffmpeg

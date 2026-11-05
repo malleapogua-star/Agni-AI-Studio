@@ -3,6 +3,7 @@ import os
 import shutil
 import tempfile
 import logging
+import math
 from pathlib import Path
 from typing import Literal
 
@@ -12,6 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from starlette.background import BackgroundTask
 from gradio_client import Client, handle_file
+import imageio_ffmpeg
 
 
 # ===============================
@@ -40,6 +42,7 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
+    expose_headers=["X-Video-Width", "X-Video-Height"],
 )
 
 LTX_SPACE = "Lightricks/ltx-video-distilled"
@@ -64,6 +67,12 @@ RESOLUTION_DIMENSIONS = {
     },
 }
 
+ASPECT_RATIO_VALUES = {
+    "16:9": 16 / 9,
+    "9:16": 9 / 16,
+    "1:1": 1,
+}
+
 
 # ===============================
 # HEALTH CHECK
@@ -79,6 +88,29 @@ async def home():
 @app.get("/health")
 def health_check():
     return {"status": "AGNI AI Backend Running"}
+
+
+def inspect_video_dimensions(video_path: str) -> tuple[int, int]:
+    reader = imageio_ffmpeg.read_frames(video_path)
+    try:
+        metadata = next(reader)
+    finally:
+        reader.close()
+
+    size = metadata.get("size")
+    if not isinstance(size, tuple) or len(size) != 2:
+        raise RuntimeError("LTX returned a video without readable dimensions.")
+
+    width, height = size
+    if (
+        not isinstance(width, int)
+        or not isinstance(height, int)
+        or width < 1
+        or height < 1
+    ):
+        raise RuntimeError("LTX returned invalid video dimensions.")
+
+    return width, height
 
 
 # ===============================
@@ -179,7 +211,9 @@ def generate_video(
 
         final_prompt = (
             f"{prompt.strip()}. "
-            f"Visual style: {style}."
+            f"Visual style: {style}. "
+            "Prioritize sharp focus, clear subject details, fine textures, "
+            "and coherent natural motion."
         )
 
         negative_prompt = (
@@ -207,7 +241,7 @@ def generate_video(
                 ui_frames_to_use=9,
                 seed_ui=42,
                 randomize_seed=True,
-                ui_guidance_scale=1,
+                ui_guidance_scale=3,
                 improve_texture_flag=True,
                 api_name="/image_to_video",
             )
@@ -232,7 +266,7 @@ def generate_video(
                 ui_frames_to_use=9,
                 seed_ui=42,
                 randomize_seed=True,
-                ui_guidance_scale=1,
+                ui_guidance_scale=3,
                 improve_texture_flag=True,
                 api_name="/text_to_video",
             )
@@ -259,6 +293,28 @@ def generate_video(
                 "LTX did not return a valid video file."
             )
 
+        actual_width, actual_height = inspect_video_dimensions(video_path)
+        logger.info(
+            "LTX returned %sx%s video for requested %s (%sx%s).",
+            actual_width,
+            actual_height,
+            resolution,
+            width,
+            height,
+        )
+        if not math.isclose(
+            actual_width / actual_height,
+            ASPECT_RATIO_VALUES[aspect_ratio],
+            rel_tol=0.005,
+        ):
+            raise HTTPException(
+                status_code=502,
+                detail=(
+                    f"LTX returned {actual_width}x{actual_height}, which does "
+                    f"not preserve the requested {aspect_ratio} aspect ratio."
+                ),
+            )
+
         # Copy output into a temporary directory.
         # It will be deleted only after the response is sent.
 
@@ -275,6 +331,10 @@ def generate_video(
             path=output_path,
             media_type="video/mp4",
             filename="agni-ai-video.mp4",
+            headers={
+                "X-Video-Width": str(actual_width),
+                "X-Video-Height": str(actual_height),
+            },
             background=BackgroundTask(
                 shutil.rmtree,
                 temp_dir,

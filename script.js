@@ -93,6 +93,13 @@ generateBtn.addEventListener("click", async function () {
             throw new Error("Server did not return a valid video file.");
         }
 
+        const videoWidth = Number(response.headers.get("X-Video-Width"));
+        const videoHeight = Number(response.headers.get("X-Video-Height"));
+        if (!Number.isInteger(videoWidth) || !Number.isInteger(videoHeight) ||
+            videoWidth < 1 || videoHeight < 1) {
+            throw new Error("Backend did not report the generated video dimensions.");
+        }
+
         if (currentVideoUrl) {
             URL.revokeObjectURL(currentVideoUrl);
         }
@@ -106,7 +113,8 @@ generateBtn.addEventListener("click", async function () {
             block: "center"
         });
 
-        statusText.textContent = "✅ Your AI video is ready!";
+        statusText.textContent =
+            `✅ Your AI video is ready: ${videoWidth}×${videoHeight} pixels (requested ${resolutionInput.value}).`;
     } catch (error) {
         console.error("AGNI AI error:", error);
         statusText.textContent =
