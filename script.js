@@ -5,6 +5,7 @@ const promptInput = document.getElementById("prompt");
 const durationInput = document.getElementById("duration");
 const styleInput = document.getElementById("style");
 const ratioInput = document.getElementById("ratio");
+const resolutionInput = document.getElementById("resolution");
 const imageInput = document.getElementById("imageUpload");
 const imagePreview = document.getElementById("imagePreview");
 const statusText = document.getElementById("status");
@@ -49,6 +50,7 @@ generateBtn.addEventListener("click", async function () {
     formData.append("duration", durationInput.value);
     formData.append("style", styleInput.value);
     formData.append("aspect_ratio", ratioInput.value);
+    formData.append("resolution", resolutionInput.value);
 
     if (imageInput && imageInput.files.length > 0) {
         formData.append("image", imageInput.files[0]);

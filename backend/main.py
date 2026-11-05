@@ -51,6 +51,19 @@ IMAGE_EXTENSIONS = {
     "image/webp": ".webp",
 }
 
+RESOLUTION_DIMENSIONS = {
+    "480p": {
+        "16:9": (854, 480),
+        "9:16": (480, 854),
+        "1:1": (480, 480),
+    },
+    "720p": {
+        "16:9": (1280, 720),
+        "9:16": (720, 1280),
+        "1:1": (720, 720),
+    },
+}
+
 
 # ===============================
 # HEALTH CHECK
@@ -87,6 +100,7 @@ def generate_video(
         "9:16",
         "1:1"
     ] = Form("16:9"),
+    resolution: Literal["480p", "720p", "1080p"] = Form("480p"),
     image: UploadFile | None = File(None),
 ):
 
@@ -108,17 +122,19 @@ def generate_video(
             detail="Duration must be between 0.3 and 8.5 seconds."
         )
 
+    if resolution == "1080p":
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "1080p is unavailable: the LTX Video Fast Space "
+                "limits generated width and height to 1280 pixels."
+            )
+        )
+
+    width, height = RESOLUTION_DIMENSIONS[resolution][aspect_ratio]
     temp_dir = tempfile.mkdtemp(prefix="agni_ai_")
 
     try:
-
-        # Video dimensions
-        width, height = {
-            "16:9": (704, 384),
-            "9:16": (384, 704),
-            "1:1": (512, 512),
-        }[aspect_ratio]
-
         # ===============================
         # IMAGE VALIDATION
         # ===============================
